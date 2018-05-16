@@ -1,4 +1,6 @@
-//use proxy free internet 
+// //use proxy free internet 
+ Web3 = require('web3');
+ web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 const IPFS = require('ipfs-api');
 const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
 const randomData = "8803cf48b8805198dbf85b2e0d514320"; // random bytes for testing
