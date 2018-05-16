@@ -10,6 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "eth-ecies": "^1.0.2",
-    "ethereumjs-util": "^5.2.0"
+    "ethereumjs-util": "^5.2.0",
+    "ipfs": "^0.28.2",
+    "ipfs-api": "^21.0.0",
+    "ipfs-mini": "^1.1.2",
+    "node-forge": "^0.7.5",
+    "rsa-proxy-reencrypt": "0.0.2"
   }
 }
