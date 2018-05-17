@@ -2,19 +2,14 @@
 var fs = require('fs');
 Web3 = require('web3');
 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-code = fs.readFileSync('Test.sol').toString();
-solc = require('solc');
-compiledCode = solc.compile(code);
+abi = JSON.parse('[{"constant":false,"inputs":[{"name":"patientkey","type":"string"},{"name":"hash1","type":"bytes32"},{"name":"hash2","type":"bytes32"}],"name":"storeHash","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"num","type":"uint256"}],"name":"getPatientHash","outputs":[{"name":"","type":"string"},{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"patientArray","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getListLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]')
 
-abiDefinition = JSON.parse(compiledCode.contracts[':StoreRec'].interface)
-VotingContract = web3.eth.contract(abiDefinition)
-byteCode = compiledCode.contracts[':StoreRec'].bytecode
-deployedContract = VotingContract.new({data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
-contractInstance = VotingContract.at(deployedContract.address)
-
-VotingContract = web3.eth.contract(abiDefinition);
+var contractAddress = '0xc48f1963571fda71468fa62e662da4d268acb6b6'
+VotingContract = web3.eth.contract(abi);
 // In your nodejs console, execute contractInstance.address to get the address at which the contract is deployed and change the line below to use your deployed address
-web3.eth.defaultAccount=web3.eth.accounts[0]
+contractInstance = VotingContract.at(contractAddress);
+
+web3.eth.defaultAccount=web3.eth.accounts[2];
 
 // //storing data and retrieving hash
 // const IPFS = require('ipfs-api');
@@ -28,22 +23,12 @@ web3.eth.defaultAccount=web3.eth.accounts[0]
  
 //  console.log("HASH:", hash);
 // });
-const hash = "Qmaj3ZhZtHynXc1tpnTnSBNsq8tZihMuV34wAvpURPZZMs";
-const bs58 = require('bs58')
-const bytes = bs58.decode(hash)
-const temp = bytes.toString('hex').substring(4);
-//console.log(temp)
-var temp2 = "0x".concat(temp);
-//console.log(temp2)
-console.log(hash.length)
-console.log(web3.fromAscii(hash.substr(0,24)))
-console.log(web3.fromAscii(hash.substr(24,46)))
-console.log(web3.toAscii('0x516d616a335a685a7448796e58633174706e546e53424e737138745a69'))
-console.log(web3.toAscii('0x684d75563334774176705552505a5a4d73'))
 web3.fromAscii(bytes.toString('hex').substr(4))
-contractInstance.storeHash("1234",web3.fromAscii(hash.substr(0,24)),web3.fromAscii(hash.substr(24,46)));
-
-
+contractInstance.storeHash("1234",web3.fromAscii(hash.substr(0,24)),web3.fromAscii(hash.substr(24,46)),{from: web3.eth.accounts[2], gas:3000000});
+var l = contractInstance.getListLength();
+console.log(l.toString())
+var l2 = contractInstance.getPatientHash(0,{from: web3.eth.accounts[2], gas:3000000}).toString();
+console.log(l2)
 //extraacting data from hash
 // ipfs.cat(hash, (err, data) => {
 //  if (err) {

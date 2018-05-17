@@ -1,6 +1,6 @@
 pragma solidity ^0.4.21;
 
-contract StoreRec {
+contract Test {
   
   mapping (string => bytes32[]) private hashmap;
   string[] public patientArray;
@@ -10,7 +10,7 @@ contract StoreRec {
 
   }
 
-  function storeHash(string patientkey,bytes32 hash1, bytes32 hash2) public {
+  function storeHash(string patientkey,bytes32 hash1,bytes32 hash2) public {
      // bytes32 temp = stringToBytes32(hash);
     if(hashmap[patientkey].length==0)
     {
@@ -19,6 +19,7 @@ contract StoreRec {
     }
       hashmap[patientkey].push(hash1);
       hashmap[patientkey].push(hash2);
+      
   }
 
 function getPatientHash(uint256 num) view public returns (string,bytes32[]) {
