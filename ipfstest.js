@@ -23,7 +23,7 @@ web3.eth.defaultAccount=web3.eth.accounts[2];
  
 //  console.log("HASH:", hash);
 // });
-web3.fromAscii(bytes.toString('hex').substr(4))
+const hash = "Qmaj3ZhZtHynXc1tpnTnSBNsq8tZihMuV34wAvpURPZZMs";
 contractInstance.storeHash("1234",web3.fromAscii(hash.substr(0,24)),web3.fromAscii(hash.substr(24,46)),{from: web3.eth.accounts[2], gas:3000000});
 var l = contractInstance.getListLength();
 console.log(l.toString())
