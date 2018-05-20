@@ -20,7 +20,9 @@ function encrypt(publicKey, data) {
 var ans = encrypt(publicKey,data)
 console.log(ans)
 
-// var temp = util.privateToPublic('0x678a4219995820077c75c01eb72f58f8d3fe67b5a989fee822b313dadaff7a68')
+
+//deriving public key from private key
+// var temp = util.privateToPublic('0x616c0f618793eb4ffc03ddcc793e451803067d8d3cde435fd7a517c7c290cf20')
 // console.log(temp.toString('hex'))
 
 //testing proxy re-encyrption
