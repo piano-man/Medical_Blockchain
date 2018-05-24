@@ -27,6 +27,20 @@ async function checkValidity(id,pwd)
 
 }
 
+async function checkHospitalValidity(id,pwd)
+{
+    let db =  await mongo.connect(url)
+    var ans = await db.collection('hospitals').findOne({"id":id})
+    if(ans!=null)
+    {
+        return ans
+    }
+    else{
+        return "Error"
+    }
+
+}
+
 async function decrypt(privateKey, encryptedData) {
     let userPrivateKey = new Buffer(privateKey, 'hex');
     let bufferEncryptedData = new Buffer(encryptedData, 'base64');
@@ -35,6 +49,15 @@ async function decrypt(privateKey, encryptedData) {
     let decryptedData = ecies.decrypt(userPrivateKey, bufferEncryptedData);
     
     return decryptedData.toString('utf8');
+}
+
+async function encrypt(publicKey, data) {
+    let userPublicKey = new Buffer(publicKey, 'hex');
+    let bufferData = new Buffer(data);
+
+    let encryptedData = ecies.encrypt(userPublicKey, bufferData);
+
+    return encryptedData.toString('base64')
 }
 
 app.post('/storekeys/:patientid/:pwd',function(req,res){
@@ -93,5 +116,47 @@ app.post('/decryptrecord',async function(req,res){
     var fans = await decrypt(pvtkey.toString(),record.toString());
     console.log(fans);
     res.send({"decryptedData":fans})
+
+})
+
+app.post('/encryptrecord',async function(req,res){
+    var pbkey = req.body.pbkey;
+    var record = req.body.data;
+    var ans = await encrypt(pbkey.toString(),record.toString());
+    console.log("in here")
+    console.log(ans)
+    res.send({"encryptedData":ans})
+
+})
+
+app.get('/hospitallogin/:id/:pwd',async function(req,res){
+    var id = req.params.id
+    var pwd = req.params.pwd
+    var result = await checkHospitalValidity(id,pwd)
+    res.send({"result":result})
+})
+
+app.post('/storehospitalkeys/:patientid/:pwd',function(req,res){
+    var patid = req.params.patientid;
+    var password = req.params.pwd;
+    console.log(patid)
+    console.log(req.body.value)
+    var record = {
+        id:patid,
+        login_password:password,
+        pbkey:req.body.pbkey,
+        pvtkey:req.body.value
+    }
+    mongo.connect(url,function(err,db){
+        db.collection('hospitals').insertOne(record,function(err,result){
+            if(err)
+            {
+                console.log(err)
+            }
+            else{
+                res.send({"response":"success"})
+            }
+        })
+    })
 
 })
