@@ -60,6 +60,30 @@ async function encrypt(publicKey, data) {
     return encryptedData.toString('base64')
 }
 
+async function getPublicKey(patid)
+{
+    
+    var db = await mongo.connect(url)
+    var result = await db.collection('registration').findOne({"id":patid})
+    var key = result.pbkey;
+    return key;
+}
+
+async function mapids(hid,patid)
+{
+        var db = await mongo.connect(url)
+        var ans = await db.collection('hospital_patients').findOne({"hospital":hid,"patient":patid})
+        if(ans==null)
+        {
+            var res = await db.collection('hospital_patients').insertOne({"hospital":hid,"patient":patid})
+        }
+        else{
+            var res = "already exists" 
+        }
+        return res
+   
+}
+
 app.post('/storekeys/:patientid/:pwd',function(req,res){
     var patid = req.params.patientid;
     var password = req.params.pwd;
@@ -127,6 +151,22 @@ app.post('/encryptrecord',async function(req,res){
     console.log(ans)
     res.send({"encryptedData":ans})
 
+})
+
+app.post('/hospitalencrypt/:patientid/:hospitalid',async function(req,res){
+    console.log("working")
+    var publicKey
+    var hid = req.params.hospitalid
+    var patid = req.params.patientid;
+    var pat_record = req.body.pat;
+    console.log(req.body.pat)
+    var rel = await mapids(hid,patid)
+    console.log(rel)
+    var pbkey = await getPublicKey(patid);
+    console.log(pbkey) 
+    var enc_record = await encrypt(pbkey.toString(),pat_record.toString());
+    console.log(enc_record);
+    res.send({"result":enc_record})   
 })
 
 app.get('/hospitallogin/:id/:pwd',async function(req,res){
