@@ -134,6 +134,21 @@ app.get('/getHospitals',async function(req,res){
 
 })
 
+app.get('/getPatientList/:hospital_id',async function(req,res){
+    console.log("triggered")
+    let rel = new Array()
+    let db = await mongo.connect(url)
+    var cursor = await db.collection('hospital_patients').find({})
+    cursor.forEach(function(doc,err){
+        rel.push(doc.patient)
+    })
+    setTimeout(function(){
+        console.log(rel)
+        console.log("sending")
+        res.send({"result":rel})
+    },3000)
+})
+
 app.post('/decryptrecord',async function(req,res){
     var pvtkey = req.body.pvtkey
     var record = req.body.data
@@ -146,7 +161,8 @@ app.post('/decryptrecord',async function(req,res){
 app.post('/encryptrecord',async function(req,res){
     var pbkey = req.body.pbkey;
     var record = req.body.data;
-    var ans = await encrypt(pbkey.toString(),record.toString());
+    var frec = JSON.stringify(record)
+    var ans = await encrypt(pbkey.toString(),frec.toString());
     console.log("in here")
     console.log(ans)
     res.send({"encryptedData":ans})
@@ -164,7 +180,10 @@ app.post('/hospitalencrypt/:patientid/:hospitalid',async function(req,res){
     console.log(rel)
     var pbkey = await getPublicKey(patid);
     console.log(pbkey) 
-    var enc_record = await encrypt(pbkey.toString(),pat_record.toString());
+    var frec = JSON.stringify(pat_record)
+    //console.log(JSON.stringify(pat_record))
+    console.log(frec.toString())
+    var enc_record = await encrypt(pbkey.toString(),frec.toString());
     console.log(enc_record);
     res.send({"result":enc_record})   
 })
