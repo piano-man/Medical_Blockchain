@@ -10,9 +10,9 @@ def plot(d):
     x3 = d[4]
     y3 = d[5]
     fig = plt.figure()
-    plt.plot(x,y,'.r-')
-    plt.plot(x2,y2,'.b-')
-    plt.plot(x3,y3,'.g-')
+    plt.plot(x,y,'.r-',label='smart contract 1')
+    plt.plot(x2,y2,'.b-',label='smart contract 2')
+    plt.plot(x3,y3,'.g-',label='smart contract 3')
     mix = min(min(x),min(x2))
     mx = max(max(x),max(x2),max(x3))
     my = max(max(y),max(y2),max(y3))
