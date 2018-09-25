@@ -17,7 +17,7 @@ def plot(d):
     mx = max(max(x),max(x2),max(x3))
     my = max(max(y),max(y2),max(y3))
     miy = min(min(y),min(y2),min(y3))
-    plt.axis([0,mx+100,0,my+100])
+    plt.axis([0,mx,0,my])
     plt.legend(loc="upper left")
 
     fig.savefig("time_comparision.png")
