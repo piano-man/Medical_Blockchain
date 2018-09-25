@@ -28,7 +28,7 @@ def getLogs(filename):
                 newrow.append(x)
             vinay_space.append(newrow)
     return vinay_space
-files = ['ipfs','mongo']
+files = ['sc1','sc2','sc3']
 data = []
 for x in files:
     data.append(getLogs(x))
