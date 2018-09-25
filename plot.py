@@ -7,13 +7,16 @@ def plot(d):
     y = d[1]
     x2 = d[2]
     y2 = d[3]
+    x3 = d[4]
+    y3 = d[5]
     fig = plt.figure()
-    plt.plot(x,y,'ro')
-    plt.plot(x2,y2,'bo')
+    plt.plot(x,y,'.r-')
+    plt.plot(x2,y2,'.b-')
+    plt.plot(x3,y3,'.g-')
     mix = min(min(x),min(x2))
-    mx = max(max(x),max(x2))
-    my = max(max(y),max(y2))
-    miy = min(min(y),min(y2))
+    mx = max(max(x),max(x2),max(x3))
+    my = max(max(y),max(y2),max(y3))
+    miy = min(min(y),min(y2),min(y3))
     plt.axis([0,mx+100,0,my+100])
 
     fig.savefig("time_comparision.png")
